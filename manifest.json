@@ -1,0 +1,20 @@
+{
+    "BundleType": "Application",
+    "BundleIdentifier": "musical-journey",
+    "BundleVersion": "0.0.1",
+    "AppIcon": {
+        "36x18": "icon.png"
+    },
+    "AppName": {
+        "en": "Musical Journey"
+    },
+    "AppDescription": "Go on a musical journey",
+    "SupportedLanguages": [
+        "en"
+    ],
+	"RequiredPermissions": [
+		"http://*.audioscrobbler.com",
+        "http://*.echonest.com"
+	],
+    "VendorIdentifier": "andrewburgess"
+}
