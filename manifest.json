@@ -14,7 +14,9 @@
     ],
 	"RequiredPermissions": [
 		"http://*.audioscrobbler.com",
-        "http://*.echonest.com"
+        "http://*.echonest.com",
+        "http://*.last.fm",
+        "http://placehold.it"
 	],
     "VendorIdentifier": "andrewburgess"
 }

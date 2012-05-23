@@ -136,8 +136,11 @@ textarea {
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
+html {
+  background-color: white;
+}
 body {
-  margin: 0;
+  margin: 10px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
@@ -7330,6 +7333,31 @@ a.badge:hover {
     overflow: visible !important;
   }
 }
-html {
-  background-color: white;
+.jumbotron {
+  position: relative;
+}
+.jumbotron h1 {
+  margin-bottom: 9px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.jumbotron p {
+  margin-bottom: 18px;
+  font-weight: 300;
+}
+.subhead h1 {
+  font-size: 54px;
+}
+#navigator .image-holder {
+  margin-right: 15px;
+  height: 400px;
+  width: 400px;
+}
+#navigator .image-holder .sp-image {
+  height: 400px;
+  width: 400px;
+}
+#navigator .info-pane h1 {
+  font-size: 40px;
 }
