@@ -7330,3 +7330,6 @@ a.badge:hover {
     overflow: visible !important;
   }
 }
+html {
+  background-color: white;
+}
