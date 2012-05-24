@@ -73,10 +73,20 @@ function updateUpcomingTracks() {
     doWork();
 }
 
+function pickOne(index) {
+    if (index === undefined)
+        index = Math.round(Math.random() * 2) + 1;
+        
+    var uri = $('.upcoming').find('#col' + index).addClass('selected').data('uri');
+    $('.upcoming').find('#col' + index + ' .artist-image').addClass('selected');
+    console.log('Playing ' + uri + ' next');
+}
+
 function doWork() {
     var currentArtist = player.track.data.artists[0].name;
     setTimeout(function() {
         if (upcoming.length != 3) doWork();
+        else pickOne();
     }, 100);
     lastFM.makeRequest('artist.getSimilar', {artist: currentArtist, limit: 40, autocorrect: 1}, function (data) {
         var len = data.similarartists.artist.length - 1;
@@ -128,9 +138,10 @@ function doWork() {
 
 function processUpcoming(uri, index) {
     var el = $('.upcoming').find('#col' + index).empty();
+    el.data('uri', uri);
     models.Track.fromURI(uri, function (track) {
         var img = new views.Image(track.data.album.cover);
-        el.prepend($('<div />').addClass('artist-image').append($(img.node)).addClass('selected'));
+        el.prepend($('<div />').addClass('artist-image').append($(img.node)));
         
         el.append($('<div />').addClass('artist-name').text(track.artists[0].name.decodeForText())).
            append($('<div />').addClass('track-title').text(track.name.decodeForText()));
