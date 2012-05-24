@@ -7349,15 +7349,33 @@ a.badge:hover {
 .subhead h1 {
   font-size: 54px;
 }
+#navigator .current {
+  margin-bottom: 20px;
+}
+#navigator .upcoming .span4 {
+  text-align: center;
+}
 #navigator .image-holder {
   margin-right: 15px;
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
 }
 #navigator .image-holder .sp-image {
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
+}
+#navigator .info-pane {
+  height: 300px;
+  position: relative;
 }
 #navigator .info-pane h1 {
   font-size: 40px;
+}
+#navigator .info-pane .bio {
+  height: 128px;
+  overflow-y: auto;
+}
+#navigator .info-pane #artist-images {
+  position: absolute;
+  left: 315px;
 }

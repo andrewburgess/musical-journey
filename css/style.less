@@ -24,20 +24,43 @@
 }
 
 #navigator {
+    .current {
+        margin-bottom: 20px;
+    }
+    
+    .upcoming {        
+        .span4 {
+            text-align: center;
+        }
+    }
+
     .image-holder {
         margin-right: 15px;
-        height: 400px;
-        width: 400px;
+        height: 300px;
+        width: 300px;
         
         .sp-image {
-            height: 400px;
-            width: 400px;
+            height: 300px;
+            width: 300px;
         }
     }
     
     .info-pane {
+        height: 300px;
+        position: relative;
+    
         h1 {
             font-size: 40px;
+        }
+        
+        .bio {
+            height: 128px;
+            overflow-y: auto;
+        }
+        
+        #artist-images {
+            position: absolute;
+            left: 315px;
         }
     }
 }

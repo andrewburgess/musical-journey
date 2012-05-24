@@ -11,6 +11,13 @@
         args.format = "json";
         args.method = method;
         
+        var key = JSON.stringify(args);
+        
+        if (localStorage.getItem(key) !== null) {
+            callback(JSON.parse(localStorage.getItem(key)));
+            return;
+        }
+        
         console.log("LASTFM: " + "http://ws.audioscrobbler.com/2.0/", args);
         $.ajax({
             dataType: "jsonp",
@@ -20,6 +27,7 @@
             success: function (data) {
                 console.log("LASTFM: Received data", data);
                 if (self.checkResponse(data)) {
+                    localStorage.setItem(key, JSON.stringify(data));
                     callback(data);
                 } else {
                     console.error("LASTFM: makeRequest bailed");
