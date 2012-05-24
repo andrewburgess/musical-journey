@@ -7333,6 +7333,11 @@ a.badge:hover {
     overflow: visible !important;
   }
 }
+.container {
+  width: 940px;
+  max-width: 940px;
+  min-width: 940px;
+}
 .jumbotron {
   position: relative;
 }
@@ -7354,6 +7359,8 @@ a.badge:hover {
 }
 #navigator .upcoming .span4 {
   text-align: center;
+  position: relative;
+  min-height: 300px;
 }
 #navigator .image-holder {
   margin-right: 15px;
@@ -7374,8 +7381,19 @@ a.badge:hover {
 #navigator .info-pane .bio {
   height: 128px;
   overflow-y: auto;
+  position: relative;
+  z-index: 2;
+}
+#navigator .info-pane .artist-images-container {
+  position: absolute;
+  height: 100px;
+  left: 315px;
+  z-index: 1;
+  bottom: 0px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 625px;
 }
 #navigator .info-pane #artist-images {
-  position: absolute;
-  left: 315px;
+  width: 725px;
 }
