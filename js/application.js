@@ -77,8 +77,9 @@ function pickOne(index) {
     if (index === undefined)
         index = Math.round(Math.random() * 2) + 1;
         
+    $('.upcoming').find('.col').removeClass('selected');
+        
     var uri = $('.upcoming').find('#col' + index).addClass('selected').data('uri');
-    $('.upcoming').find('#col' + index + ' .artist-image').addClass('selected');
     console.log('Playing ' + uri + ' next');
 }
 
