@@ -51,73 +51,65 @@ function updateUpcomingTracks() {
         $('.upcoming').find('#col' + i).empty().append($('<div />').addClass('throbber').append($('<div />')));
     }
 
-    var currentArtist = player.track.data.artists[0].name;
     upcoming = new Array();
     completedLock = false;
-    lastFM.makeRequest('artist.getSimilar', {artist: currentArtist, limit: 15, autocorrect: 1}, function (data) {
-        setTimeout(function() {
-            if (upcoming.length != 3) updateUpcomingTracks();
-        }, 5000);
-    
-        var artistIndexes = new Array();
-        for (var i = 0; i < 15; i++) artistIndexes[i] = i;
-        artistIndexes.shuffle();
+    doWork();
+}
+
+function doWork() {
+    var currentArtist = player.track.data.artists[0].name;
+    setTimeout(function() {
+        if (upcoming.length != 3) doWork();
+    }, 100);
+    lastFM.makeRequest('artist.getSimilar', {artist: currentArtist, limit: 40, autocorrect: 1}, function (data) {
+        var len = data.similarartists.artist.length - 1;
+        var artist = data.similarartists.artist[Math.round(Math.random() * len)];
         
-        for (var i = 0; i < 5; i++) {
-            var artist = data.similarartists.artist[artistIndexes[i]];
-            var a = artist.name;
-            console.log(a);
+        var a = artist.name;
+        console.log(a);
+        
+        if (upcoming.length == 3) {
+            return;
+        }
             
+        lastFM.makeRequest('artist.getTopTracks', {artist: a, autocorrect: 1, limit: 10}, function (toptracks) {
             if (upcoming.length == 3) {
                 return;
             }
             
-            lastFM.makeRequest('artist.getTopTracks', {artist: a, autocorrect: 1, limit: 10}, function (toptracks) {
+            var found = false;
+            var tlen = toptracks.toptracks.track.length - 1;
+            var track = toptracks.toptracks.track[Math.round(Math.random() * tlen)];
+            
                 if (upcoming.length == 3) {
                     return;
                 }
                 
-                var found = false;
-                var trackIndexes = new Array();
-                for (var i = 0; i < 10; i++) trackIndexes[i] = i;
-                trackIndexes.shuffle();
-                
-                for (var i = 0; i < 3; i++) {
-                    var track = toptracks.toptracks.track[trackIndexes[i]];
-                    if (upcoming.length == 3) {
+                var query = 'artist:' + a + ' track:' + track.name;
+                var search = new models.Search(query);
+                search.localResults = models.LOCALSEARCHRESULTS.APPEND;
+                search.pageSize = 1;
+                search.searchAlbums = false;
+                search.searchArtists = false;
+                search.searchPlaylists = false;
+                search.observe(models.EVENT.CHANGE, function () {
+                    if (upcoming.length == 3 || found) {
                         return;
                     }
-                    var query = 'artist:' + a + ' track:' + track.name;
-                    var search = new models.Search(query);
-                    search.localResults = models.LOCALSEARCHRESULTS.APPEND;
-                    search.pageSize = 1;
-                    search.searchAlbums = false;
-                    search.searchArtists = false;
-                    search.searchPlaylists = false;
-                    search.observe(models.EVENT.CHANGE, function () {
-                        if (upcoming.length == 3 || found) {
-                            return;
-                        }
-                        
-                        if (search.tracks.length > 0) {
-                            console.log('pushing ' + search.tracks[0].data.uri);
-                            console.log(upcoming.length);
-                            upcoming.push(search.tracks[0].data.uri);
-                            console.log(upcoming.length);
-                            processUpcoming(search.tracks[0].data.uri, upcoming.length);
-                            found = true;
-                        }
-                    });
                     
-                    search.appendNext();
-                }
-            });
-        }
+                    if (search.tracks.length > 0) {
+                        upcoming.push(search.tracks[0].data.uri);
+                        processUpcoming(search.tracks[0].data.uri, upcoming.length);
+                        found = true;
+                    }
+                });
+                
+                search.appendNext();
+        });
     });
 }
 
 function processUpcoming(uri, index) {
-    console.log("processing " + index);
     var el = $('.upcoming').find('#col' + index).empty();
     models.Track.fromURI(uri, function (track) {
         var img = new views.Image(track.data.album.cover);
