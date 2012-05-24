@@ -26,9 +26,7 @@ $(function() {
     });
 });
 
-function handlePlayerChanged(event) {
-    console.log(event);
-    
+function handlePlayerChanged(event) {    
     if (event.data.curtrack) {
         var runningLock = false;
         updateCurrentInfo();
@@ -59,6 +57,7 @@ function updateCurrentInfo() {
 function updateUpcomingTracks() {
     var currentArtist = player.track.data.artists[0].name;
     upcoming = new Array();
+    completedLock = false;
     lastFM.makeRequest('artist.getSimilar', {artist: currentArtist, limit: 15, autocorrect: 1}, function (data) {
         var artistIndexes = new Array();
         for (var i = 0; i < 15; i++) artistIndexes[i] = i;
@@ -91,7 +90,6 @@ function updateUpcomingTracks() {
                         return;
                     }
                     var query = 'artist:' + a + ' track:' + track.name;
-                    console.log('Looking up ' + query);
                     var search = new models.Search(query);
                     search.localResults = models.LOCALSEARCHRESULTS.APPEND;
                     search.pageSize = 1;
@@ -106,9 +104,7 @@ function updateUpcomingTracks() {
                         
                         if (found) return;
                         
-                        console.log(search.tracks);
                         if (search.tracks.length > 0) {
-                            console.log(search.tracks[0]);
                             upcoming.push(search.tracks[0].data.uri);
                             found = true;
                             
@@ -129,7 +125,7 @@ function processUpcoming() {
     completedLock = true;
     
     $.each(upcoming, function (index, entry) {
-        var el = $('.upcoming').find('#col' + (index + 1));
+        var el = $('.upcoming').find('#col' + (index + 1)).empty();
         models.Track.fromURI(entry, function (track) {
             var img = new views.Image(track.data.album.cover);
             el.prepend($('<div />').addClass('artist-image').
@@ -146,14 +142,12 @@ function processUpcoming() {
 function resizeWindow() {
     var imgCount = Math.floor(Math.min($('.bio').width() / 100.0, 25));
     if ($('#artist-images').find('img').length > imgCount) {
-        console.log('trimming');
         $('#artist-images').find('img:gt(' + (imgCount - 1) + ')').remove();
     } else if ($('#artist-images').find('img').length == imgCount) {
         //Do nothing
     } else {
         $('#artist-images').empty();
         var artist = player.track.data.artists[0].name;
-        console.log('getting more images: ' + imgCount);
         getImages(artist, imgCount);
     }
     
