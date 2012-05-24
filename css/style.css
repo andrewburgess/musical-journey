@@ -7338,6 +7338,12 @@ a.badge:hover {
   max-width: 940px;
   min-width: 940px;
 }
+#test {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+}
 .jumbotron {
   position: relative;
 }
@@ -7357,10 +7363,34 @@ a.badge:hover {
 #navigator .current {
   margin-bottom: 20px;
 }
-#navigator .upcoming .span4 {
+#navigator .upcoming .col {
   text-align: center;
   position: relative;
   min-height: 300px;
+  border-radius: 20px;
+}
+#navigator .upcoming .col .sp-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+}
+#navigator .upcoming .col .artist-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+}
+#navigator .upcoming .col .artist-image.selected {
+  box-shadow: 0px 0px 10px 3px #ff9999;
+}
+#navigator .upcoming .artist-name {
+  font-size: 20px;
+  margin: 10px 0px;
+  font-weight: bold;
+}
+#navigator .upcoming .track-title {
+  font-size: 16px;
+  margin: 5px 0px;
+  font-weight: bold;
 }
 #navigator .image-holder {
   margin-right: 15px;
@@ -7370,6 +7400,7 @@ a.badge:hover {
 #navigator .image-holder .sp-image {
   height: 300px;
   width: 300px;
+  border-radius: 10px;
 }
 #navigator .info-pane {
   height: 300px;
@@ -7377,12 +7408,22 @@ a.badge:hover {
 }
 #navigator .info-pane h1 {
   font-size: 40px;
+  line-height: 46px;
 }
 #navigator .info-pane .bio {
   height: 128px;
   overflow-y: auto;
   position: relative;
   z-index: 2;
+}
+#navigator .info-pane .info-pane-container {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 625px;
+}
+#navigator .info-pane .info-pane-container h1,
+#navigator .info-pane .info-pane-container h2 {
+  width: 1000px;
 }
 #navigator .info-pane .artist-images-container {
   position: absolute;

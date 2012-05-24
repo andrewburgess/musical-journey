@@ -32,8 +32,11 @@ function updateCurrentInfo() {
     var img = new views.Image(player.track.data.album.cover);
     $('#current-image').html(img.node);
     
-    $('#artist-name').empty().text(getArtistNameList(player.track.data.artists));
-    $('#track-title').empty().text(player.track.data.name.decodeForText());
+    var artistName = trimText(getArtistNameList(player.track.data.artists), $('#artist-name'), 625);
+    var trackTitle = trimText(player.track.data.name.decodeForText(), $('#track-title'), 625);
+    
+    $('#artist-name').empty().text(artistName);
+    $('#track-title').empty().text(trackTitle);
     
     var artist = player.track.data.artists[0].name;
     
@@ -41,9 +44,23 @@ function updateCurrentInfo() {
         $('.bio').html(data.artist.bio.summary);
     });
     
-    var imgCount = Math.floor(Math.min($('.bio').width() / 100.0, 25));
-    if ($('.bio').width() % 100.0 > 0) imgCount++;
-    getImages(artist, imgCount);
+    getImages(artist);
+}
+
+function trimText(txt, el, width) {
+    var test = $('#test').empty();
+    test.text(txt).css('font-size', el.css('font-size')).css('font-weight', el.css('font-weight'));
+    if (test.width() > width) {
+        while (test.width() > width) {
+            txt = txt.substring(0, txt.length - 1);
+            console.log(txt);
+            test.text(txt + '...!');
+        }
+        
+        txt = txt + '...';
+    }
+    
+    return txt;
 }
 
 function updateUpcomingTracks() {
@@ -113,18 +130,15 @@ function processUpcoming(uri, index) {
     var el = $('.upcoming').find('#col' + index).empty();
     models.Track.fromURI(uri, function (track) {
         var img = new views.Image(track.data.album.cover);
-        el.prepend($('<div />').addClass('artist-image').
-                                css('height', el.width()).
-                                css('width', el.width()).append(
-                                    $(img.node).css('height', el.width()).css('width', el.width())
-                                ));
+        el.prepend($('<div />').addClass('artist-image').append($(img.node)).addClass('selected'));
         
-        el.append($('<h1 />').text(track.artists[0].name.decodeForText())).append($('<h2 />').text(track.name.decodeForText()));
+        el.append($('<div />').addClass('artist-name').text(track.artists[0].name.decodeForText())).
+           append($('<div />').addClass('track-title').text(track.name.decodeForText()));
     });
 }
 
-function getImages(artist, limit) {
-    lastFM.makeRequest('artist.getImages', {artist: artist, limit: limit, autocorrect: 1}, function (data) {
+function getImages(artist) {
+    lastFM.makeRequest('artist.getImages', {artist: artist, limit: 10, autocorrect: 1}, function (data) {
         img = data.images.image;
 		$.each(img, function(index, image) {
 			if (image.sizes.size[2]["#text"].indexOf(".gif") > -1) {

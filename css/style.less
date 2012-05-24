@@ -7,6 +7,13 @@
     min-width: 940px;
 }
 
+#test {
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+}
+
 .jumbotron {
     position: relative;
     
@@ -35,11 +42,42 @@
     }
     
     .upcoming {        
-        .span4 {
+        .col {
             text-align: center;
             position: relative;
             min-height: 300px;
+            border-radius: 20px;
+            
+            .sp-image {
+                width: 300px;
+                height: 300px;
+                border-radius: 20px;
+            }
+            
+            .artist-image {
+                width: 300px;
+                height: 300px;
+                border-radius: 20px;
+                
+                &.selected {
+                    box-shadow: 0px 0px 10px 3px #f99;
+                }
+            }
         }
+        
+        .artist-name {
+            font-size: 20px;
+            margin: 10px 0px;
+            font-weight: bold;
+        }
+        
+        .track-title {
+            font-size: 16px;
+            margin: 5px 0px;
+            font-weight: bold;
+        }
+        
+        
     }
 
     .image-holder {
@@ -50,6 +88,7 @@
         .sp-image {
             height: 300px;
             width: 300px;
+            border-radius: 10px;
         }
     }
     
@@ -59,6 +98,7 @@
     
         h1 {
             font-size: 40px;
+            line-height: 46px;
         }
         
         .bio {
@@ -66,6 +106,16 @@
             overflow-y: auto;
             position: relative;
             z-index: 2;
+        }
+        
+        .info-pane-container {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            width: 625px;
+            
+            h1, h2 {
+                width: 1000px;
+            }
         }
         
         .artist-images-container {
