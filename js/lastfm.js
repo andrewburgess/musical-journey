@@ -63,7 +63,7 @@
         }
         var remaining = 1024 * 1024 * 5 - unescape(encodeURIComponent(JSON.stringify(localStorage))).length;
         console.log('Remaining space in cache: ' + Math.round((remaining / 1024.0), 2) + ' KB');
-        if (remaining < 100000) {
+        if (remaining < 500000) {
             console.log('Cleaning cache');
             
             var toRemove = new Array();

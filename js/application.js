@@ -37,6 +37,10 @@ $(function() {
         
         letsDoIt = true;
         
+        while (playlist.length > 0) {
+            playlist.remove(0);
+        }
+        
         updateCurrentInfo();
         updateUpcomingTracks();
     });
@@ -45,6 +49,10 @@ $(function() {
 function handlePlayerChanged(event) {
     if (event.data.curtrack) {
         if (player.playing && isCurrentContext()) {
+            $('#nothing').hide();
+            $('#start').hide();
+            $('#navigator').show();
+            
             updateCurrentInfo();
             updateUpcomingTracks();
         } else {
