@@ -14,12 +14,14 @@ $(function() {
     //Start up function
     player.observe(models.EVENT.CHANGE, handlePlayerChanged);
     
-    updateCurrentInfo();
-    updateUpcomingTracks();
+    if (player.playing) {
+        updateCurrentInfo();
+        updateUpcomingTracks();
+    }
 });
 
 function handlePlayerChanged(event) {    
-    if (event.data.curtrack) {
+    if (event.data.curtrack && player.playing) {
         updateCurrentInfo();
         updateUpcomingTracks();
     }
