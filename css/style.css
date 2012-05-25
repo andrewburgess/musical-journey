@@ -7337,6 +7337,8 @@ a.badge:hover {
   width: 940px;
   max-width: 940px;
   min-width: 940px;
+  z-index: 2;
+  position: relative;
 }
 #test {
   position: absolute;
@@ -7357,8 +7359,26 @@ a.badge:hover {
   margin-bottom: 18px;
   font-weight: 300;
 }
+.jumbotron #start {
+  margin: 15px 30px;
+}
 .subhead h1 {
   font-size: 54px;
+}
+.super-large {
+  font-size: 72px;
+  font-weight: bold;
+}
+#nothing {
+  position: fixed;
+  height: 210px;
+  width: 940px;
+  top: 50%;
+  left: 50%;
+  margin-top: -105px;
+  margin-left: -470px;
+  line-height: 50px;
+  text-align: center;
 }
 #navigator .current {
   margin-bottom: 20px;
@@ -7414,7 +7434,7 @@ a.badge:hover {
   height: 128px;
   overflow-y: auto;
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 #navigator .info-pane .info-pane-container {
   overflow-x: hidden;

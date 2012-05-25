@@ -10,20 +10,53 @@ var upcoming = new Array();
 
 var completedLock = false;
 
+var letsDoIt = false;
+
 $(function() {
     //Start up function
     player.observe(models.EVENT.CHANGE, handlePlayerChanged);
     
-    if (player.playing) {
+    if (player.playing && isCurrentContext()) {
+        $('#nothing').hide();
+        $('#start').hide();
+        $('#navigator').show();
         updateCurrentInfo();
         updateUpcomingTracks();
+    } else {
+        $('#nothing').show();
+        $('#start').show();
+        $('#navigator').hide();
     }
+    
+    $('#start').click(function () {
+        if (player.playing && isCurrentContext()) return;
+    
+        $('#nothing').hide();
+        $('#start').hide();
+        $('#navigator').show();
+        
+        letsDoIt = true;
+        
+        updateCurrentInfo();
+        updateUpcomingTracks();
+    });
 });
 
-function handlePlayerChanged(event) {    
-    if (event.data.curtrack && player.playing) {
-        updateCurrentInfo();
-        updateUpcomingTracks();
+function handlePlayerChanged(event) {
+    if (event.data.curtrack) {
+        if (player.playing && isCurrentContext()) {
+            updateCurrentInfo();
+            updateUpcomingTracks();
+        } else {
+            if (letsDoIt) {
+                playPlaylist();
+                letsDoIt = false;
+            } else {
+                $('#nothing').show();
+                $('#start').show();
+                $('#navigator').hide();
+            }
+        }
     }
 };
 
@@ -83,15 +116,19 @@ function pickOne(index) {
         
     var uri = $('.upcoming').find('#col' + index).addClass('selected').data('uri');
     console.log('Playing ' + uri + ' next');
+    
+    if (playlist.length > 0)
+        playlist.remove(playlist.length - 1);
+    playlist.add(uri);
 }
 
 function doWork() {
     var currentArtist = player.track.data.artists[0].name;
-    setTimeout(function() {
-        if (upcoming.length != 3) doWork();
-        else pickOne();
-    }, 100);
     lastFM.makeRequest('artist.getSimilar', {artist: currentArtist, limit: 40, autocorrect: 1}, function (data) {
+        setTimeout(function() {
+            if (upcoming.length != 3) doWork();
+            else pickOne();
+        }, 100);
         var len = data.similarartists.artist.length - 1;
         var artist = data.similarartists.artist[Math.round(Math.random() * len)];
         
@@ -151,6 +188,14 @@ function processUpcoming(uri, index) {
     });
 }
 
+function playPlaylist () {
+    sp.trackPlayer.setContextCanSkipPrev(playlist.uri, false);
+    sp.trackPlayer.setContextCanRepeat(playlist.uri, false);
+    sp.trackPlayer.setContextCanShuffle(playlist.uri, false);
+    
+    player.play(playlist.get(0), self.playlist, 0);
+}
+
 function getImages(artist) {
     lastFM.makeRequest('artist.getImages', {artist: artist, limit: 10, autocorrect: 1}, function (data) {
         img = data.images.image;
@@ -185,6 +230,10 @@ function getArtistNameLinkList(container, artists) {
 		container.append("<a></a>").attr("href", artists[i].uri).text(artists[i].name.decodeForText());
 	}
 	return container;
+}
+
+function isCurrentContext () {
+    return player.context === playlist.uri;
 }
 
 Array.prototype.shuffle = function() {
