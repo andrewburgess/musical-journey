@@ -111,14 +111,17 @@ function updateUpcomingTracks() {
 function pickOne(index) {
     if (index === undefined)
         index = Math.round(Math.random() * 2) + 1;
+    else {
+        if (playlist.length > 0) {
+            playlist.remove(playlist.length - 1);
+        }
+    }
         
     $('.upcoming').find('.col').removeClass('selected');
         
     var uri = $('.upcoming').find('#col' + index).addClass('selected').data('uri');
     console.log('Playing ' + uri + ' next');
     
-    if (playlist.length > 0)
-        playlist.remove(playlist.length - 1);
     playlist.add(uri);
 }
 
