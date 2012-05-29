@@ -5,7 +5,7 @@
         this.key = "21edbb30193dc36e6fb21cc57b1d8e18";
     };
 
-    LastFM.prototype.makeRequest = function (method, args, callback) {
+    LastFM.prototype.makeRequest = function (method, args, callback, errorCallback) {
         var self = this;
         
         if (!cleanupCacheLock)
@@ -37,6 +37,7 @@
                     callback(data);
                 } else {
                     console.error("LASTFM: makeRequest bailed");
+                    errorCallback(data.error);
                 }
             },
             error: function (jqxhr, textStatus, errorThrown) {

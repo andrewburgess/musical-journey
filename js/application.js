@@ -10,6 +10,8 @@ var upcoming = new Array();
 
 var completedLock = false;
 
+var seed = '';
+
 var letsDoIt = false;
 
 $(function() {
@@ -36,6 +38,8 @@ $(function() {
         $('#navigator').show();
         
         letsDoIt = true;
+        
+        seed = player.track.data.artists[0].name;
         
         while (playlist.length > 0) {
             playlist.remove(0);
@@ -75,10 +79,9 @@ function updateCurrentInfo() {
     var img = new views.Image(player.track.data.album.cover);
     $('#current-image').html(img.node);
     
-    var artistName = trimText(getArtistNameList(player.track.data.artists), $('#artist-name'), 625);
+    getArtistNameLinkList($('#artist-name').empty(), player.track.data.artists);
     var trackTitle = trimText(player.track.data.name.decodeForText(), $('#track-title'), 625);
     
-    $('#artist-name').empty().text(artistName);
     $('#track-title').empty().text(trackTitle);
     
     var artist = player.track.data.artists[0].name;
@@ -133,8 +136,12 @@ function pickOne(index) {
     playlist.add(uri);
 }
 
-function doWork() {
-    var currentArtist = player.track.data.artists[0].name;
+function doWork(currentArtist) {
+    var retry = true;
+    if (currentArtist == undefined)
+        currentArtist = player.track.data.artists[0].name;
+    else
+        retry = false;
     lastFM.makeRequest('artist.getSimilar', {artist: currentArtist, limit: 40, autocorrect: 1}, function (data) {
         setTimeout(function() {
             if (upcoming.length != 3) doWork();
@@ -184,6 +191,11 @@ function doWork() {
                 
                 search.appendNext();
         });
+    }, function (errorCode) {
+        if (errorCode == 6 && retry) {
+            //Artist not found, try again with seed artist
+            doWork(seed);
+        }
     });
 }
 
@@ -194,8 +206,9 @@ function processUpcoming(uri, index) {
         var img = new views.Image(track.data.album.cover);
         el.prepend($('<div />').addClass('artist-image').append($(img.node)));
         
-        el.append($('<div />').addClass('artist-name').text(track.artists[0].name.decodeForText())).
-           append($('<div />').addClass('track-title').text(track.name.decodeForText()));
+        el.append($('<div />').addClass('artist-name'));
+        getArtistNameLinkList($(el.find('.artist-name')), track.artists);
+        el.append($('<div />').addClass('track-title').text(track.name.decodeForText()));
     });
 }
 
